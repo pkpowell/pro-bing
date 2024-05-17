@@ -673,7 +673,8 @@ func newExpBackoff(baseDelay time.Duration, maxExp int64) expBackoff {
 
 func (p *Pinger) recvICMP(conn packetConn, recv chan<- *packet) error {
 	// Start by waiting for 50 µs and increase to a possible maximum of ~ 100 ms.
-	expBackoff := newExpBackoff(50*time.Microsecond, 100)
+	expBackoff := newExpBackoff(time.Millisecond, 11)
+	// expBackoff := newExpBackoff(50*time.Microsecond, 100)
 	delay := expBackoff.Get()
 
 	// Workaround for https://github.com/golang/go/issues/47369
@@ -696,13 +697,13 @@ func (p *Pinger) recvICMP(conn packetConn, recv chan<- *packet) error {
 				if p.OnRecvError != nil {
 					p.OnRecvError(err)
 				}
-				// if neterr, ok := err.(*net.OpError); ok {
-				// 	if neterr.Timeout() {
-				// 		// Read timeout
-				// 		delay = expBackoff.Get()
-				// 		continue
-				// 	}
-				// }
+				if neterr, ok := err.(*net.OpError); ok {
+					if neterr.Timeout() {
+						// Read timeout
+						delay = expBackoff.Get()
+						continue
+					}
+				}
 				return err
 			}
 

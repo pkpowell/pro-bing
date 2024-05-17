@@ -696,14 +696,13 @@ func (p *Pinger) recvICMP(conn packetConn, recv chan<- *packet) error {
 				if p.OnRecvError != nil {
 					p.OnRecvError(err)
 				}
-				if neterr, ok := err.(*net.OpError); ok {
-					if neterr.Timeout() {
-						fmt.Println("timeout err")
-						// Read timeout
-						delay = expBackoff.Get()
-						continue
-					}
-				}
+				// if neterr, ok := err.(*net.OpError); ok {
+				// 	if neterr.Timeout() {
+				// 		// Read timeout
+				// 		delay = expBackoff.Get()
+				// 		continue
+				// 	}
+				// }
 				return err
 			}
 

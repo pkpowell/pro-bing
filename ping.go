@@ -671,10 +671,7 @@ func newExpBackoff(baseDelay time.Duration, maxExp int64) expBackoff {
 	return expBackoff{baseDelay: baseDelay, maxExp: maxExp}
 }
 
-func (p *Pinger) recvICMP(
-	conn packetConn,
-	recv chan<- *packet,
-) error {
+func (p *Pinger) recvICMP(conn packetConn, recv chan<- *packet) error {
 	// Start by waiting for 50 µs and increase to a possible maximum of ~ 100 ms.
 	expBackoff := newExpBackoff(50*time.Microsecond, 100)
 	delay := expBackoff.Get()

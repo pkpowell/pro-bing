@@ -676,7 +676,7 @@ func (p *Pinger) recvICMP(
 	recv chan<- *packet,
 ) error {
 	// Start by waiting for 50 µs and increase to a possible maximum of ~ 100 ms.
-	expBackoff := newExpBackoff(50*time.Microsecond, 11)
+	expBackoff := newExpBackoff(50*time.Microsecond, 50)
 	delay := expBackoff.Get()
 
 	// Workaround for https://github.com/golang/go/issues/47369
